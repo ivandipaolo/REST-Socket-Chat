@@ -1,5 +1,7 @@
 //Desestructurar funciones de un paquete
 const {Router} = require('express');
+const {roleValidation, emailValidation, userValidation} = require('../helpers/db-validators')
+
 const {
     usuariosGet,
     usuariosPut,
@@ -12,7 +14,6 @@ const {
 //si el email existe, etc.
 const {check} = require('express-validator');
 const { validate } = require('../middleWares/validations');
-const Role = require('../models/role');
 
 const router = Router();
 
@@ -23,7 +24,11 @@ router.get('/', usuariosGet);
     // Petición Get
     //res.send('Hello World');// Se manda como text/html
 
-router.put('/:id', usuariosPut);
+router.put('/:id',[
+    check('id', 'Its not a valid id').isMongoId(),
+    check('id').custom(userValidation),
+    validate
+], usuariosPut);
 
 //Hacemos la valdacion del email como middleware
 //usando la funcion check
@@ -33,23 +38,26 @@ router.post('/', [
     //esto va a crear una base de errores, no va a crear el error en si
     //se lo va a pasar el error cuando se ejecute el controlador de usuariosPost 
     check('email', 'The email its invalid').isEmail(),
+    check('email').custom(emailValidation),
     check('name', 'The name is obligatory').not().isEmpty(),
     check('password', 'The password must have at least 8 characters').isLength({min:8}),
     //Este check es si es algo preciso dentro de un array pero con el role se hace una bd diferente
     // check('role', 'The role doesnt exist. ').isIn(['ADMIN_ROLE', 'USER_ROLE']),
-    check('role').custom(async (role = '' /* Se le asigna por defecto nada */) => {
-        const roleExist = await Role.findOne({role});//Chequea en la bd de roles si existe
-        if(!roleExist){//Este if se lanza antes que el validate de abajo
-            throw new Error(`The role ${role} doesnt exist in the database`);
-        }
-    }),
+    check('role').custom(roleValidation),// Se podria escribir asi o  
+    // check('role').custom((rol) => roleValidation(rol)), pero es lo mismo q la linea de arriba
+    //Se pone el validate al final de todos los checks para q no continue a la funcion en caso
+    // de que haya un error.
     validate
 ]
 
 //si mandamos varios middlewares se mandan como arreglo
 ,usuariosPost);
 
-router.delete('/', usuariosDelete);
+router.delete('/:id',[
+    check('id', 'Its not a valid id').isMongoId(),
+    check('id').custom(userValidation),
+    validate
+], usuariosDelete);
 
 router.patch('/', usuariosPatch);
 

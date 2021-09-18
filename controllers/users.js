@@ -5,34 +5,63 @@ const bcryptjs = require('bcryptjs');
 //porque desp se hace user = new User para q no choque
 const User = require('../models/user');
 
-const usuariosGet = (req, res = response) => {
+const usuariosGet = async (req, res = response) => {
     
     //params se usa para el query desp de una url y el signo ?
     //en la solicitud api x ej, etc.
-    const params = req.query;
+    // // const params = req.query;
+
     //se puede desestructurar como:
     //se le puede poner algo por defecto por si no viene un parametro
     //como el nombre:
-    const {q, nombre = "No Name", page = 1, apikey} = req.query;
+    // // const {q, nombre = "No Name", page = 1, apikey} = req.query;
+    
+    //Los argumentos vienen como string
+    const {cant, from} = req.query;
+
+    //De la manera de poner 2 await uno abajo del otro se va a esperar q se ejecute uno y desp el otro
+    //para solucionarlo hacemos un promise.all y un arreglo de cosas a ejecutarse.
+    // // const users = await User.find({estate: true})//condicion dentro de find para mostrar usuarios activos
+    // //     .skip(Number(from)-1)//desde q registro
+    // //     .limit(Number(cant));//cuantos registros
+    // // const total = await User.countDocuments({estate: true}); // misma condicion q find
+
+    //Esto ejecuta las 2 de manera simultanea, si una da error, da error todo
+    //Lo ejecutamnos con desestructuracion de arreglos [1,2,3] = [0,1,2]
+    const [users, total] = await Promise.all( [
+        User.find({estate: true})
+            .skip(Number(from)-1)//desde q registro
+            .limit(Number(cant)),//cuantos registros
+        User.countDocuments({estate: true})
+    ]);
     res.status(200).json({ // Mandamos un objeto en formato json
         msg: "Get api - usuariosGet",
-        params,
-        q,
-        nombre,
-        page,
-        apikey
+        total,
+        users
     })
 };
 
-const usuariosPut = (req, res = response) => {
+const usuariosPut = async (req, res = response) => {
 
     const id = req.params.id;
     // o
     // const {id} = req.params;
 
+    //Extraigo todo lo que viene que no nocesito del body
+    const {_id, password, email, google, ...other} = req.body;
+
+    //Validar id
+    if (password){//si manda contraseña es porque la quiere actualizar
+        //Encriptar contraseña
+        const salt = bcryptjs.genSaltSync();
+        other.password = bcryptjs.hashSync(password, salt);
+    };
+
+    const user = await User.findByIdAndUpdate(id, other);
+
     res.json({ 
         msg: "Put api - usuariosPut",
-        id
+        user
     })
 };
 
@@ -45,17 +74,6 @@ const usuariosPost = async (req, res = response) => {
     const {name, email, password, role} = req.body;
     const user = new User({name, email, password, role});
     
-    //Verificar si correo existe
-    //npm express-validator
-    //se hace un findOne del User (va a buscar un usuario que tenga el email...) 
-    // seria User.findOne({email: email})
-    const existEmail = await User.findOne({email});
-    if (existEmail){
-        // se hace un return de un json de error (status 400) con msg
-        return res.status(400).json({
-            msg: "Email already exist."
-        })
-    }
     //Encriptar contraseña:
     //salt es el numero de vueltas para hacer la encriptacion
     //mientras mas alto mas tarda pero mas complicada es
@@ -65,15 +83,20 @@ const usuariosPost = async (req, res = response) => {
     
     //Se grava usuario en mongo pero tengo q verificar q le mando bien todos los datos obligatorios.
     await user.save();
-    res.json({
-        msg: "Post api - usuariosPost",
-        user
-    })
+    res.json(user);
 };
 
-const usuariosDelete = (req, res = response) => {
+const usuariosDelete = async (req, res = response) => {
+    // Manera de borrar un doc
+    const {id, ...other} = req.params;
+    // const user = await User.findByIdAndDelete(id);
+
+    //Manera de cambiar el valor V
+    const user = await User.findByIdAndUpdate(id, {estate: false});
+
     res.json({ 
-        msg: "PUT api - usuariosDelete"
+        msg: "PUT api - usuariosDelete",
+        user
     })
 };
 
