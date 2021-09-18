@@ -17,7 +17,7 @@ const usuariosGet = async (req, res = response) => {
     // // const {q, nombre = "No Name", page = 1, apikey} = req.query;
     
     //Los argumentos vienen como string
-    const {cant, from} = req.query;
+    const {cant = 4, from = 1} = req.query;
 
     //De la manera de poner 2 await uno abajo del otro se va a esperar q se ejecute uno y desp el otro
     //para solucionarlo hacemos un promise.all y un arreglo de cosas a ejecutarse.
@@ -28,11 +28,11 @@ const usuariosGet = async (req, res = response) => {
 
     //Esto ejecuta las 2 de manera simultanea, si una da error, da error todo
     //Lo ejecutamnos con desestructuracion de arreglos [1,2,3] = [0,1,2]
-    const [users, total] = await Promise.all( [
+    const [total,users] = await Promise.all( [
+        User.countDocuments({estate: true}),
         User.find({estate: true})
             .skip(Number(from)-1)//desde q registro
-            .limit(Number(cant)),//cuantos registros
-        User.countDocuments({estate: true})
+            .limit(Number(cant))//cuantos registros
     ]);
     res.status(200).json({ // Mandamos un objeto en formato json
         msg: "Get api - usuariosGet",
