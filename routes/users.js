@@ -12,8 +12,18 @@ const {
 
 //Desestructuramos funcion de express validator para validar
 //si el email existe, etc.
-const {check} = require('express-validator');
-const { validate } = require('../middleWares/validations');
+const { check } = require('express-validator');
+
+// const { validate } = require('../middleWares/validations');
+// const { validateJWT } = require('../middleWares/validateJWT');
+// const { validateAdminRole, hasRoles } = require('../middleWares/validateRole');
+
+const {
+    validate,
+    validateJWT,
+    validateAdminRole,
+    hasRoles,
+} = require('../middleWares/index')
 
 const router = Router();
 
@@ -54,6 +64,10 @@ router.post('/', [
 ,usuariosPost);
 
 router.delete('/:id',[
+    //Se valida primero el jwt para que no siga con las validaciones si da error
+    validateJWT,
+    // validateAdminRole,
+    hasRoles('ADMIN_ROLE', 'SELLER_ROLE'),
     check('id', 'Its not a valid id').isMongoId(),
     check('id').custom(userValidation),
     validate

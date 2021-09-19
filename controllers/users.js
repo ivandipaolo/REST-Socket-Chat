@@ -88,16 +88,15 @@ const usuariosPost = async (req, res = response) => {
 
 const usuariosDelete = async (req, res = response) => {
     // Manera de borrar un doc
-    const {id, ...other} = req.params;
-    // const user = await User.findByIdAndDelete(id);
+    const {id} = req.params;
+    // const user = await User.findByIdAndDelete(id); 
 
     //Manera de cambiar el valor V
     const user = await User.findByIdAndUpdate(id, {estate: false});
 
-    res.json({ 
-        msg: "PUT api - usuariosDelete",
-        user
-    })
+    const authenticatedUser = req.user;
+
+    res.json({user, authenticatedUser})
 };
 
 const usuariosPatch = (req, res = response) => {

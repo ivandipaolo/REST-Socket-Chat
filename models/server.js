@@ -10,6 +10,7 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
         this.usersPath = '/api/users';
+        this.authPath = '/api/auth';
         // Acá middlewares > funciones q se ejecutan cuando levantamos nuestro server
         // los middlewares se usan con app.use
         //Conecto mi servidor a la base de datos
@@ -36,6 +37,7 @@ class Server {
     }
 
     routes() {
+        this.app.use(this.authPath, require('../routes/auth'));
         //Middleware que le voy a poner cierta ruta
         this.app.use(this.usersPath, require('../routes/users'));
 
@@ -47,6 +49,7 @@ class Server {
         }))
     }
 
+    
 }
 
 module.exports = Server;

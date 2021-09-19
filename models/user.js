@@ -32,7 +32,8 @@ const UserSchema = Schema({
 //de la misma y con funcion flecha el this toma otro valor
 UserSchema.methods.toJSON = function() {
     //Le sacamos version y password a lo que devuelve la consola
-    const {__v, password, ...user } = this.toObject();
+    const {__v, password, _id, ...user } = this.toObject();
+    user.uid = _id;
     return user;
 };
 
