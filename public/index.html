@@ -32,7 +32,7 @@
 
             const url = (window.localtion.hostname.includes('localhost')) ?
                 'http://localhost:8080/api/auth/google' :
-                'https://ivandp-restserver.herokuapp.com/';
+                'https://ivandp-restserver.herokuapp.com/api/auth/google';
 
             //Primer argumento del fetch es el url, segundo es la config , en este caso metodo y header
             fetch(url,{
