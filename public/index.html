@@ -31,7 +31,7 @@
             const body = {id_token: response.credential};
 
             //Primer argumento del fetch es el url, segundo es la config , en este caso metodo y header
-            fetch(`${window.location.href}/api/auth/google`,{
+            fetch(`${window.location.href}api/auth/google`,{
                 method: 'POST',
                 headers: {
                     //Tipo de contenido q estoy enviando
