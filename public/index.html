@@ -30,8 +30,12 @@
             //Google Token = ID_TOKEN
             const body = {id_token: response.credential};
 
+            const url = (window.localtion.hostname.includes('localhost')) ?
+                'http://localhost:8080/api/auth/google' :
+                'https://ivandp-restserver.herokuapp.com/';
+
             //Primer argumento del fetch es el url, segundo es la config , en este caso metodo y header
-            fetch('http://localhost:8080/api/auth/google',{
+            fetch(url,{
                 method: 'POST',
                 headers: {
                     //Tipo de contenido q estoy enviando
