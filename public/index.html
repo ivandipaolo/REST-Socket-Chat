@@ -29,13 +29,9 @@
         function handleCredentialResponse(response) {
             //Google Token = ID_TOKEN
             const body = {id_token: response.credential};
-            console.log((window.location.hostname.includes('localhost')))
-            var urlF = (window.location.hostname.includes('localhost')) ?
-                'http://localhost:8080/api/auth/google' :
-                "https://ivandp-restserver.herokuapp.com/api/auth/google";
 
             //Primer argumento del fetch es el url, segundo es la config , en este caso metodo y header
-            fetch(urlF,{
+            fetch(`${window.location.href}/api/auth/google`,{
                 method: 'POST',
                 headers: {
                     //Tipo de contenido q estoy enviando
