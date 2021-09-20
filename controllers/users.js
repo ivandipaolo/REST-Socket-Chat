@@ -5,7 +5,7 @@ const bcryptjs = require('bcryptjs');
 //porque desp se hace user = new User para q no choque
 const User = require('../models/user');
 
-const usuariosGet = async (req, res = response) => {
+const usersGet = async (req, res = response) => {
     
     //params se usa para el query desp de una url y el signo ?
     //en la solicitud api x ej, etc.
@@ -35,13 +35,13 @@ const usuariosGet = async (req, res = response) => {
             .limit(Number(cant))//cuantos registros
     ]);
     res.status(200).json({ // Mandamos un objeto en formato json
-        msg: "Get api - usuariosGet",
+        msg: "Get api - usersGet",
         total,
         users
     })
 };
 
-const usuariosPut = async (req, res = response) => {
+const usersPut = async (req, res = response) => {
 
     const id = req.params.id;
     // o
@@ -60,12 +60,12 @@ const usuariosPut = async (req, res = response) => {
     const user = await User.findByIdAndUpdate(id, other);
 
     res.json({ 
-        msg: "Put api - usuariosPut",
+        msg: "Put api - usersPut",
         user
     })
 };
 
-const usuariosPost = async (req, res = response) => {
+const usersPost = async (req, res = response) => {
     //Esta cosntante body la voy a igualar
     //al body de lo que la persona está solicitando (request)
     // const body = req.body;
@@ -86,7 +86,7 @@ const usuariosPost = async (req, res = response) => {
     res.json(user);
 };
 
-const usuariosDelete = async (req, res = response) => {
+const usersDelete = async (req, res = response) => {
     // Manera de borrar un doc
     const {id} = req.params;
     // const user = await User.findByIdAndDelete(id); 
@@ -99,16 +99,16 @@ const usuariosDelete = async (req, res = response) => {
     res.json({user, authenticatedUser})
 };
 
-const usuariosPatch = (req, res = response) => {
+const usersPatch = (req, res = response) => {
     res.json({ 
-        msg: "PUT api - usuariosPatch"
+        msg: "PUT api - usersPatch"
     })
 };
 
 module.exports = {
-    usuariosGet,
-    usuariosPut,
-    usuariosPost,
-    usuariosDelete,
-    usuariosPatch
+    usersGet,
+    usersPut,
+    usersPost,
+    usersDelete,
+    usersPatch
 }

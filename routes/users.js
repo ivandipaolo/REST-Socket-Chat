@@ -3,11 +3,11 @@ const {Router} = require('express');
 const {roleValidation, emailValidation, userValidation} = require('../helpers/db-validators')
 
 const {
-    usuariosGet,
-    usuariosPut,
-    usuariosPost,
-    usuariosDelete,
-    usuariosPatch
+    usersGet,
+    usersPut,
+    usersPost,
+    usersDelete,
+    usersPatch
 } = require('../controllers/users');
 
 //Desestructuramos funcion de express validator para validar
@@ -27,10 +27,10 @@ const {
 
 const router = Router();
 
-//No estoy ejecutando la funcion usuariosGet, estoy enviando
+//No estoy ejecutando la funcion usersGet, estoy enviando
 //una referencia a la misma como callback que esta en controllers.
 //Se le va a mandar la req y res
-router.get('/', usuariosGet);
+router.get('/', usersGet);
     // Petición Get
     //res.send('Hello World');// Se manda como text/html
 
@@ -38,7 +38,7 @@ router.put('/:id',[
     check('id', 'Its not a valid id').isMongoId(),
     check('id').custom(userValidation),
     validate
-], usuariosPut);
+], usersPut);
 
 //Hacemos la valdacion del email como middleware
 //usando la funcion check
@@ -46,7 +46,7 @@ router.put('/:id',[
 //si se mandan 2 argumentos el segundo es el controlador
 router.post('/', [
     //esto va a crear una base de errores, no va a crear el error en si
-    //se lo va a pasar el error cuando se ejecute el controlador de usuariosPost 
+    //se lo va a pasar el error cuando se ejecute el controlador de usersPost 
     check('email', 'The email its invalid').isEmail(),
     check('email').custom(emailValidation),
     check('name', 'The name is obligatory').not().isEmpty(),
@@ -61,7 +61,7 @@ router.post('/', [
 ]
 
 //si mandamos varios middlewares se mandan como arreglo
-,usuariosPost);
+,usersPost);
 
 router.delete('/:id',[
     //Se valida primero el jwt para que no siga con las validaciones si da error
@@ -71,9 +71,9 @@ router.delete('/:id',[
     check('id', 'Its not a valid id').isMongoId(),
     check('id').custom(userValidation),
     validate
-], usuariosDelete);
+], usersDelete);
 
-router.patch('/', usuariosPatch);
+router.patch('/', usersPatch);
 
 
 

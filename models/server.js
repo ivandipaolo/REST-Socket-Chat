@@ -9,8 +9,18 @@ class Server {
     constructor(){
         this.app = express();
         this.port = process.env.PORT;
-        this.usersPath = '/api/users';
-        this.authPath = '/api/auth';
+
+//Para dejar esto mejor lo hacemos con objeto
+        // this.categoriesPath = '/api/categories'
+        // this.usersPath = '/api/users';
+        // this.authPath = '/api/auth';
+        this.paths = {
+            categories: '/api/categories',
+            users: '/api/users',
+            auth: '/api/auth',
+            products: '/api/products',
+        } 
+
         // Acá middlewares > funciones q se ejecutan cuando levantamos nuestro server
         // los middlewares se usan con app.use
         //Conecto mi servidor a la base de datos
@@ -37,10 +47,11 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.authPath, require('../routes/auth'));
+        this.app.use(this.paths.auth, require('../routes/auth'));
         //Middleware que le voy a poner cierta ruta
-        this.app.use(this.usersPath, require('../routes/users'));
-
+        this.app.use(this.paths.users, require('../routes/users'));
+        this.app.use(this.paths.categories, require('../routes/categories'));
+        this.app.use(this.paths.categories, require('../routes/products'));
     }
 
     listen(){
