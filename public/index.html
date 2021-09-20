@@ -29,8 +29,8 @@
         function handleCredentialResponse(response) {
             //Google Token = ID_TOKEN
             const body = {id_token: response.credential};
-
-            const url = (window.localtion.hostname.includes('localhost')) ?
+            console.log((window.location.hostname.includes('localhost')))
+            const url = (window.location.hostname.includes('localhost')) ?
                 'http://localhost:8080/api/auth/google' :
                 'https://ivandp-restserver.herokuapp.com/api/auth/google';
 
