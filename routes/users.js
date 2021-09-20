@@ -17,7 +17,7 @@ const { check } = require('express-validator');
 // const { validate } = require('../middleWares/validations');
 // const { validateJWT } = require('../middleWares/validateJWT');
 // const { validateAdminRole, hasRoles } = require('../middleWares/validateRole');
-
+// Estas 3 importaciones se hacen mas ordenadas asi:
 const {
     validate,
     validateJWT,
