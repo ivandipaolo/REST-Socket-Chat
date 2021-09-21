@@ -51,7 +51,7 @@ class Server {
         //Middleware que le voy a poner cierta ruta
         this.app.use(this.paths.users, require('../routes/users'));
         this.app.use(this.paths.categories, require('../routes/categories'));
-        this.app.use(this.paths.categories, require('../routes/products'));
+        this.app.use(this.paths.products, require('../routes/products'));
     }
 
     listen(){

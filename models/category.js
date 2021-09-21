@@ -20,8 +20,7 @@ const CategorySchema = Schema ({
 
 CategorySchema.methods.toJSON = function() {
     //Le sacamos version y password a lo que devuelve la consola
-    const {__v, estate, _id, ...data } = this.toObject();
-    data.catId = _id;
+    const {__v, estate, ...data } = this.toObject();
     return data;
 };
 module.exports = model('Category', CategorySchema);

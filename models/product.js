@@ -21,7 +21,6 @@ const ProductSchema = Schema ({
         default: 0
     },
     category: {
-        //Le estamos diciendo q los usuarios de este tipo con ese ref igual al modelo de user es el que va a poder usarlo
         type: Schema.Types.ObjectId,
         ref: 'Category',
         required: true
@@ -32,14 +31,12 @@ const ProductSchema = Schema ({
     avaliable: {
         type: Boolean,
         default: true
-    }
-
+    },
 });
 
 ProductSchema.methods.toJSON = function() {
     //Le sacamos version y password a lo que devuelve la consola
-    const {__v, estate, _id, ...data } = this.toObject();
-    data.pdId = _id;
+    const {__v, estate, ...data } = this.toObject();
     return data;
 };
 module.exports = model('Product', ProductSchema);
