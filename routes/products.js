@@ -5,8 +5,8 @@ const { createProduct,
     deleteProduct,
     updateProduct
     } = require('../controllers/products');
-const { productValidation } = require('../helpers/db-validators');
-const { validateJWT } = require('../middleWares');
+const { productValidation, categoryValidation } = require('../helpers/db-validators');
+const { validateJWT, hasRoles } = require('../middleWares');
 const { validate } = require('../middleWares/validations');
 const router = Router();
 
@@ -18,7 +18,9 @@ router.get('/:id',[
 
 router.post('/',[
     validateJWT,
+    hasRoles('ADMIN_ROLE', 'SELLER_ROLE'),
     check ('name', 'The name is nessesary').not().isEmpty(),
+    check ('category').custom(categoryValidation),
     validate
 ], createProduct)
 

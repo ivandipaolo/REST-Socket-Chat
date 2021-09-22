@@ -13,7 +13,7 @@ const createProduct = async (req, res = response) => {
     const productDB = await Product.findOne({name: body.name});
     if (productDB){// Si existe, osea que la categoria no es nula
         return res.status(400).json({
-            msg: `The category ${productDB.name} already exists.`
+            msg: `The product ${productDB.name} already exists.`
         })
     };
     const data = {
