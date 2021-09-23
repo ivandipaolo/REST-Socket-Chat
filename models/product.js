@@ -1,6 +1,6 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const ProductSchema = Schema ({
+const ProductSchema = Schema({
     name: {
         type: String,
         required: [true, 'The product name its obligatory']
@@ -32,11 +32,14 @@ const ProductSchema = Schema ({
         type: Boolean,
         default: true
     },
+    img: {
+        type: String,
+    },
 });
 
-ProductSchema.methods.toJSON = function() {
+ProductSchema.methods.toJSON = function () {
     //Le sacamos version y password a lo que devuelve la consola
-    const {__v, estate, ...data } = this.toObject();
+    const { __v, estate, ...data } = this.toObject();
     return data;
 };
 module.exports = model('Product', ProductSchema);

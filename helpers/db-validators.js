@@ -43,10 +43,19 @@ const productValidation = async (id) =>{
     }
 }
 
+const allowedCollections = async (collection = '', collections = []) => {
+    const included = collections.includes(collection);
+    if (!included) {
+        throw new Error('Collection not allowed to update')
+    }
+    return true;
+}
+
 module.exports = {
     roleValidation,
     emailValidation,
     userValidation,
     categoryValidation,
     productValidation,
+    allowedCollections,
 }

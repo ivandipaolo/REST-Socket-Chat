@@ -2,8 +2,8 @@ const express = require('express');
 //Cors proteje nuestro serv de manera superficial
 //a veces navegadores no ejecutan cuando no se tiene
 const cors = require('cors');
+const fileUpload  = require('express-fileupload');
 const {dbConnection} = require('../database/config')
-
 class Server {
 
     constructor(){
@@ -19,7 +19,8 @@ class Server {
             users: '/api/users',
             auth: '/api/auth',
             products: '/api/products',
-            search: '/api/search'
+            search: '/api/search',
+            upload: '/api/upload'
         } 
 
         // Acá middlewares > funciones q se ejecutan cuando levantamos nuestro server
@@ -36,15 +37,23 @@ class Server {
         await dbConnection();
     }
 
-
+//Middlewares para ejecutarse antes de abrir el server
     middlewares(){
-        //Directorio publico
         this.app.use(cors())
+        //Directorio publico
         this.app.use(express.static('public'));
         
         //Lectura y parseo del body
         //Va a serializar la información entrante (Post, Put, Delete(a veces)) a formato JSON
         this.app.use(express.json());
+
+        //Middleware para manejar el fileUpload
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            //Condicion para q cree carpetas si se expecifican en la subida de archivos
+            createParentPath: true
+        }));
     }
 
     routes() {
@@ -54,6 +63,7 @@ class Server {
         this.app.use(this.paths.categories, require('../routes/categories'));
         this.app.use(this.paths.products, require('../routes/products'));
         this.app.use(this.paths.search, require('../routes/search'));
+        this.app.use(this.paths.upload, require('../routes/upload'));
     }
 
     listen(){
