@@ -2,62 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=`, initial-scale=1.0">
-    <title>Google Sign-In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta name="google-signin-client_id" content="651711830453-hp0ct5pm3ffvmqq5ji519pj2snjk6ab3.apps.googleusercontent.com">
+
 </head>
 <body>
-    <h1>Google Sign-In</h1>
-    <div id="g_id_onload"
-        data-client_id="651711830453-hp0ct5pm3ffvmqq5ji519pj2snjk6ab3.apps.googleusercontent.com"
-        data-auto_prompt="false"
-        data-callback="handleCredentialResponse">
-    </div>
-    <div class="g_id_signin"
-        data-type="standard"
-        data-size="large"
-        data-theme="outline"
-        data-text="sign_in_with"
-        data-shape="rectangular"
-        data-logo_alignment="left">
-    </div>
-    <button id='google-signout'>
-        SignOut
-    </button>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script>
-        function handleCredentialResponse(response) {
-            //Google Token = ID_TOKEN
-            const body = {id_token: response.credential};
+    <div class="row mt-5">
+        <div class="col-sm-6">
+            <h1>Google Signin</h1>
+            <hr>
+            <br>
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <br>
+            <a href="#" onclick="signOut();">Sign out</a>
+        </div>
 
-            //Primer argumento del fetch es el url, segundo es la config , en este caso metodo y header
-            fetch(`${window.location.href}api/auth/google`,{
-                method: 'POST',
-                headers: {
-                    //Tipo de contenido q estoy enviando
-                    'Content-Type':'application/json'
-                },
-                //se manda el body serializado
-                body: JSON.stringify(body)
-                })
-                .then( resp => resp.json())
-                .then( resp => {
-                    console.log(resp);
-                    localStorage.setItem('email', resp.user.email);
-                })
-                .catch(console.warn)
-        }
+        <div class="col-sm-6">
+            <h1>Login</h1>
+            <hr>
 
-        const signOut = document.getElementById('google-signout');
-        signOut.onclick = () => {
-            console.log(google.accounts.id)
-            //Para hacer el logout de la persona primero hacemos un disableAutoselect
-            google.accounts.id.disableAutoSelect();
-            google.accounts.id.revoke(localStorage.getItem('email'), done => {
-                localStorage.clear();
-                location.reload();
-            });
-        }
-    </script>
+            <form class="d-grid">
+                <input type="text" name="email" class="form-control mb-2" placeholder="Email" />
+                <input type="text" name="password" class="form-control mb-2" placeholder="Password" />
+    
+                <button type="submit" class="btn btn-primary">
+                    Join
+                </button>
+            </form>
+
+        </div>
+    </div>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="./js/auth.js"></script>
+
 </body>
 </html>

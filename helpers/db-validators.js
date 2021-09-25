@@ -1,7 +1,5 @@
 const { response } = require('express');
-const { Category, Product } = require('../models');
-const Role = require('../models/role');
-const User = require('../models/user');
+const { Category, Product, User, Role } = require('../models');
 
 const roleValidation = async (role = '' /* Se le asigna por defecto nada */) => {
         const roleExist = await Role.findOne({role});//Chequea en la bd de roles si existe

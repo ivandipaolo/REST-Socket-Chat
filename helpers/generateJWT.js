@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-
+const {User} = require('../models')
 //El jwt devuelve promise
 const generateJWT = (uid = '' /* User identifier */) => {
 
@@ -19,6 +19,26 @@ const generateJWT = (uid = '' /* User identifier */) => {
     })
 }
 
+const checkJWT = async (token = '') => {
+    try {
+        if (token.length < 10) {
+            return null
+        };
+        const {uid} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+    
+        const user = await User.findById(uid);
+        
+        if (user && user.estate === true) {
+            return user
+        }else{
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
+};
+
 module.exports = {
-    generateJWT
+    generateJWT,
+    checkJWT
 }
